@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>dilushselva — About</title>
+
+  <style>
+    :root{
+      --bg:#fff;
+      --text:#111;
+      --accent:#c51616;
+      --seam:45%;
+    }
+
+    *{box-sizing:border-box}
+    
+    html{overflow-y:scroll;}
+html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial,Helvetica,sans-serif;
+      font-size:14px;
+      line-height:1.35;
+      overflow-x:hidden;
+    }
+
+    .logo-fixed{position:fixed;top:36px;left:36px;z-index:1100}
+    .logo-fixed img{height:17px}
+    .logo-tamil{margin-top:2px;font-size:12px;letter-spacing:.12em;opacity:.85}
+
+    .header{
+      position:fixed;
+      top:36px;
+      left:36px;
+      right:36px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      font-size:13px;
+      font-weight:bold;
+      z-index:1050;
+      pointer-events:auto;
+      color:#000;
+    }
+    .leftspacer{
+      width:160px;
+      flex:0 0 160px;
+    }
+    .nav-center{
+      flex:1 1 auto;
+      display:flex;
+      justify-content:center;
+      gap:120px;
+    }
+
+    .meta{
+      flex:0 0 auto;
+      text-align:right;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:bold;
+      white-space:nowrap;
+    }
+    .nav-center a{font-size:13px;letter-spacing:.04em;color:#000;text-decoration:none}
+    .nav-center a:hover{color:var(--accent)}
+    .nav-center a.is-active{color:var(--accent);position:relative}
+    .nav-center a.is-active::after{
+      content:"";position:absolute;left:50%;transform:translateX(-50%);
+      bottom:-6px;width:18px;height:1px;background:var(--accent)
+    }
+    .meta a{color:#000;text-decoration:none}
+
+    .wrap{display:flex;width:100%;padding:88px 72px 0 36px;min-height:100vh}
+    .stage{position:relative;flex:1;overflow:hidden;display:flex;align-items:flex-start}
+
+    .bg-video{
+      position:absolute;
+      top:0;
+      right:0;
+      left:var(--seam);
+      height:100%;
+      z-index:0;
+      overflow:hidden;
+      pointer-events:none;
+      background:#000;
+    }
+    .bg-video video{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:right center;
+    }
+
+    .left-canvas{
+      position:relative;
+      z-index:2;
+      width:calc(var(--seam) + 15%);
+      padding-left:2vw;
+      padding-right:2vw;
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+    }
+
+    .portrait{
+      width:260px;
+      aspect-ratio:3/4;
+      margin-top:calc(36px + 28px);
+      margin-bottom:26px;
+      overflow:hidden;
+    }
+    .portrait img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .about-text{
+      color:var(--accent);
+      font-size:clamp(16px,1.8vw,23px);
+      line-height:1.32;
+      max-width:42ch;
+    }
+    .about-text strong{font-weight:700}
+
+    .footer{
+      position:fixed;
+      left:36px;
+      bottom:22px;
+      display:flex;
+      gap:14px;
+      font-size:13px;
+      z-index:1000;
+      align-items:baseline;
+    }
+    .footer .name{
+      color:var(--accent);
+      margin-right:8px;
+    }
+    .footer a{
+      color:#000;
+      text-decoration:none;
+    }
+    .footer a:hover,
+    .footer .name:hover{
+      color:var(--accent);
+    }
+
+    @media(max-width:900px){
+      .bg-video{display:none}
+      .left-canvas{width:100%;padding-right:0}
+      .about-text{max-width:48ch}
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="leftspacer"></div>
+  <nav class="nav-center">
+    <a href="music.html">Music</a>
+    <a href="film.html">Film</a>
+    <a href="about.html" class="is-active">About</a>
+  </nav>
+  <div class="meta">
+    <a href="mailto:dilushselva@gmail.com">dilushselva@gmail.com</a>
+  </div>
+</header>
+
+<div class="logo-fixed">
+  <img src="assets/DILUSHSELVA LOGO_small.png" alt="dilushselva logo">
+  <div class="logo-tamil">திலுஷ் செல்வா</div>
+</div>
+
+<main class="wrap">
+  <div class="stage">
+
+    <div class="bg-video" aria-hidden="true">
+      <video autoplay muted loop playsinline>
+        <source src="assets/video/we-are-here.mp4" type="video/mp4">
+        <source src="assets/video/we-are-here.webm" type="video/webm">
+      </video>
+    </div>
+
+    <div class="left-canvas">
+      <div class="portrait">
+        <img src="assets/dilush-portrait.png" alt="Portrait of Dilush Selva">
+      </div>
+
+      <p class="about-text">
+        Dilush Selva is a UK-based Tamil <strong>music producer, composer, multidisciplinary creative</strong> working across sound and moving image.
+        His work blends downtempo electronic, ambient, and alt-R&B influences with intricate South Asian melodies,
+        alongside abstract collage and storytelling rooted in diaspora &amp; migrant experiences.
+        <br><br>
+        His practice spans cinematic scores and independent releases, with releases on Soulection,
+        Sony Music South, and Saregama, and music featured on BBC Radio 1 and BBC Asian Network.
+      </p>
+    </div>
+
+  </div>
+</main>
+
+<nav class="footer" aria-label="Footer links">
+  <span class="name">dilushselva</span>
+  <a href="#top">Top</a>
+  <a href="https://www.instagram.com/dilushselva/" target="_blank">Insta</a>
+  <a href="https://soundcloud.com/lushylmao" target="_blank">SoundCloud</a>
+  <a href="https://tr.ee/t0TrKUNe1w" target="_blank">Spotify</a>
+  <a href="film.html">Film</a>
+</nav>
+
+<div id="top"></div>
+
+</body>
+</html>

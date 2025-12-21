@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>dilushselva — Film</title>
+    <!-- JetBrains Mono for numeric UI (slashed zero) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #ffffff;
+      --text: #111;
+      --accent: #c51616;
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:14px;
+      line-height:1.35;
+      overflow-x:hidden;
+    }
+
+    /* numeric UI: monospace with slashed zero */
+    .song .meta,
+    .editorial-years,
+    .editorial-years span,
+    .endnote {
+      font-family: "JetBrains Mono", monospace;
+      font-variant-numeric: slashed-zero tabular-nums;
+    }
+
+    /* organic paper grain */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.20;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(0,0,0,.20) 0 1px, transparent 2px),
+        radial-gradient(circle at 38% 62%, rgba(0,0,0,.16) 0 1.5px, transparent 3px),
+        radial-gradient(circle at 71% 27%, rgba(0,0,0,.14) 0 2px, transparent 4px),
+        radial-gradient(circle at 88% 81%, rgba(0,0,0,.12) 0 2.5px, transparent 5px),
+        radial-gradient(circle at 55% 45%, rgba(0,0,0,.10) 0 1px, transparent 3px);
+      background-size:
+        140px 160px,
+        220px 260px,
+        300px 340px,
+        420px 380px,
+        180px 200px;
+      mix-blend-mode:multiply;
+    }
+
+    /* logo */
+    .logo-fixed{
+      position: fixed;
+      top: 36px;
+      left:36px;
+      z-index: 1100;
+    }
+    .logo-fixed img{
+      height: 17px;
+      width: auto;
+      display: block;
+    }
+
+    /* header */
+    .header{
+      position:fixed;
+      top:36px;
+      left:36px;
+      right:36px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      font-size:20px;
+      font-weight:bold;
+      z-index:1050;
+      pointer-events:auto;
+      color:#000;
+    }
+    .leftspacer{
+      width:160px;
+      flex:0 0 160px;
+    }
+    .nav-center{
+      flex:1 1 auto;
+      display:flex;
+      justify-content:center;
+      gap:120px;
+    }
+    .header a{
+      color:#000;
+      text-decoration:none;
+      font-weight:bold;
+    }
+    .header a:hover{
+      color:var(--accent);
+      text-decoration:none;
+    }
+    .meta{
+      flex:0 0 auto;
+      text-align:right;
+      font-size:14px;
+      line-height:1.35;
+      font-weight:bold;
+      white-space:nowrap;
+    }
+
+    /* two-column layout */
+    .wrap{
+      display:flex;
+      gap:48px;
+      align-items:flex-start;
+      width:100%;
+      padding-left:36px;
+      padding-right:72px;
+      padding-top:88px; /* clears header */
+      min-height:1600px;
+    }
+
+    .leftcol{
+      flex:0 0 420px;
+      padding-top:0;
+    }
+
+    .poem{
+      color:#000;
+      font-size:13px;
+      letter-spacing:.1px;
+      max-width: 360px;
+      margin: 0;
+      user-select:text;
+      white-space:pre-wrap;
+    }
+
+    .stage{
+      position:relative;
+      flex:1 1 auto;
+      min-height:1600px;
+      padding-top:0;
+      padding-left:24px;
+    }
+
+    /* tiles */
+    .float{
+      position:absolute;
+      max-width: 44vw;
+    }
+
+    .song a{
+      display:block;
+      text-decoration:none;
+    }
+
+    .song img{
+      width:100%;
+      height:auto;
+      display:block;
+      border:0;
+      filter:saturate(.95) contrast(.95);
+      transition: transform 160ms ease-out;
+      will-change: transform;
+    }
+
+    /* hover drift */
+    .song a:hover img{ transform: translate(3px, -3px); }
+
+    /* caption */
+    .song .label{
+      display:block;
+      margin-top:10px;
+      font-size:13px;
+      line-height:1.25;
+      color:var(--accent);
+    }
+    .song .meta{
+      display:block;
+      margin-top:2px;
+      font-size:12px;
+      line-height:1.2;
+      color:var(--accent);
+      opacity:.9;
+    }
+
+    /* hover: red to black, no underline (for captions + footer) */
+    .song a:hover .label,
+    .song a:hover .meta,
+    .footer a:hover,
+    .footer .name:hover{
+      color:#000;
+      text-decoration:none;
+    }
+
+    /* fade-in on scroll (opacity only) */
+    .song{ opacity:0; transition: opacity 220ms ease-out; }
+    .song.is-visible{ opacity:1; }
+
+    /* letter-spacing breath */
+    .song a:hover .label,
+    .song a:hover .meta{ letter-spacing:0.02em; }
+
+    /* footer */
+    .footer{
+      position:fixed;
+      left:36px;
+      bottom:22px;
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      font-size:13px;
+      z-index:1000;
+    }
+    .footer .name{
+      color:var(--accent);
+      margin-right:8px;
+    }
+    .footer a{
+      color:#000;
+      text-decoration:none;
+    }
+    .footer a:hover{ color:#000; }
+
+    /* end note */
+    .endnote{
+      position:absolute;
+      left:44%;
+      top:1525px;
+      transform: translateX(-44%);
+      color: var(--accent);
+      font-size:13px;
+      line-height:1.2;
+      opacity:.9;
+      white-space:nowrap;
+    }
+
+    @media (max-width: 720px){
+      .header{ left:18px; right:18px; top:18px; font-size:18px; }
+      .logo-fixed{ left:18px; top:18px; }
+      .wrap{
+        display:block;
+        padding-left:18px;
+        padding-right:18px;
+        padding-top:72px;
+      }
+      .leftcol{ padding-bottom: 420px; }
+      .stage{ padding-left:0; min-height:auto; }
+      .float{ position:static; width:min(520px, 92vw); margin: 18px auto; }
+      .footer{ position:static; margin: 22px 0 0; padding: 0 18px 18px; }
+      .endnote{ position:static; transform:none; margin: 18px auto; text-align:center; }
+      .song{ opacity:1; }
+    }
+  
+    /* footer hover: black to red */
+    .footer a:hover,
+    .footer .name:hover{
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+  
+    /* context blurb (hidden until hover) */
+    .song .blurb{
+      display:block;
+      margin-top:6px;
+      font-size:12px;
+      line-height:1.25;
+      color:#000;
+      max-width: 44ch;
+      opacity:0;
+      max-height:0;
+      overflow:hidden;
+      transition: opacity 160ms ease-out, max-height 160ms ease-out;
+    }
+
+    .song a:hover .blurb{
+      opacity:1;
+      max-height:120px; /* enough for a few lines */
+    }
+
+  
+    /* extra scroll breathing room */
+    .scroll-spacer{
+      height: 338px;
+      width: 100%;
+    }
+
+  
+    .editorial-index{
+      position:fixed;
+      right:36px;
+      bottom:22px;
+      text-align:right;
+      font-size:13px;
+      line-height:1.35;
+      color:#000;
+      pointer-events:none;
+      z-index:900;
+    }
+    .editorial-years span{
+      display:block;
+      opacity:.35;
+      transition:opacity 140ms ease-out;
+    }
+    .editorial-years span.is-active{ opacity:1; }
+    .editorial-years span.is-dim{ opacity:.15; }
+
+  
+    .editorial-years{
+      margin-bottom:18px; /* refined breathing space before 'archive in progress' */
+    }
+
+
+    /* drawers */
+    .discog{
+      margin-top:18px;
+      max-width:360px;
+      pointer-events:auto;
+    }
+    .discog + .discog{ margin-top:22px; }
+    .discog > summary{
+      cursor:pointer;
+      position:relative;
+      padding-right:16px;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(0,0,0,.15);
+      font-weight:700;
+      color:#000;
+      font-size:13px;
+      letter-spacing:.02em;
+      list-style:none;
+      user-select:none;
+      outline:none;
+    }
+    .discog > summary::-webkit-details-marker{ display:none; }
+    .discog > summary::after{
+      content:"↓";
+      position:absolute;
+      right:0;
+      top:0;
+      font-size:12px;
+      opacity:.4;
+      transition: transform 160ms ease-out, opacity 160ms ease-out;
+    }
+    .discog[open] > summary::after{ transform: rotate(180deg); opacity:.25; }
+    .discog[open] > summary{ border-bottom:none; padding-bottom:0; }
+    .discog-inner{
+      margin-top:10px;
+      padding-top:10px;
+      border-top:1px solid rgba(0,0,0,.15);
+    }
+    .discog-item{
+      display:block;
+      margin-top:6px;
+      font-size:13px;
+      line-height:1.25;
+      color:#000;
+      text-decoration:none;
+    }
+    .discog-item:hover{ color:var(--accent); }
+    .pill{ margin-left:6px; font-size:11px; opacity:.55; }
+
+    /* 4:3 wrapper for We Are Here only */
+    .thumb.ar-43{
+      width:100%;
+      aspect-ratio:4/3;
+      overflow:hidden;
+    }
+    .thumb.ar-43 img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+  
+.nav-center a{
+      font-size:13px;
+      letter-spacing:.04em;
+    }
+
+.nav-center a.is-active{
+      color:var(--accent);
+      position:relative;
+    }
+.nav-center a.is-active::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:-6px;
+      width:18px;
+      height:1px;
+      background:var(--accent);
+      opacity:.8;
+    }
+
+.logo-tamil{
+      margin-top:6px;
+      font-size:12px;
+      letter-spacing:.12em;
+      opacity:.85;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    /* keep left column fixed while only the stage scrolls */
+    .leftcol{
+      position: sticky;
+      top: 124px; /* header clearance + breathing space */
+      align-self: flex-start;
+      max-height: calc(100vh - 146px);
+      overflow: auto; /* internal scroll if drawers exceed viewport */
+      padding-right: 12px;
+      overscroll-behavior: contain;
+    }
+
+    @media(max-width:720px){
+      .leftcol{
+        position: static;
+        top: auto;
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
+      }
+    }
+
+
+    .thumb-video{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+      filter:saturate(.95) contrast(.95);
+    }
+
+
+    /* hover drift for video thumbnails (match Music page) */
+    .song a:hover video{ 
+      transform: translate(3px, -3px); 
+    }
+    .song video{
+      transition: transform 160ms ease-out;
+      will-change: transform;
+    }
+
+</style>
+</head>
+
+<body>
+  <header class="header">
+    <div class="leftspacer" aria-hidden="true"></div>
+    <nav class="nav-center" aria-label="Header">
+      <a href="music.html">Music</a>
+      <a href="film.html" class="is-active">Film</a>
+      <a href="about.html">About</a>
+    </nav>
+    <div class="meta">
+      <a href="mailto:dilushselva@gmail.com">dilushselva@gmail.com</a>
+    </div>
+  </header>
+
+  <div class="logo-fixed">
+    <img src="assets/DILUSHSELVA LOGO_small.png" alt="dilushselva logo">
+    <div class="logo-tamil">திலுஷ் செல்வா</div>
+</div>
+
+  <main class="wrap" aria-label="Artist website">
+    <div class="leftcol">
+      <div class="poem" id="about">
+Selected film work across music video, documentary,
+and visual essay.
+
+Roles include editing, colour, composition,
+sound design, and music programming.
+      </div>
+
+      <details class="discog" open>
+        <summary>films / visual essays</summary>
+        <div class="discog-inner">
+          <a class="discog-item" href="https://vimeo.com/877646093" target="_blank" rel="noreferrer">In The End Everything Leads to Water <span class="pill">2023</span></a>
+          <a class="discog-item" href="https://vimeo.com/771983699" target="_blank" rel="noreferrer">Within This Square Metre <span class="pill">2022</span></a>
+        </div>
+      </details>
+
+      <details class="discog">
+        <summary>commissions / institutions</summary>
+        <div class="discog-inner">
+          <a class="discog-item" href="https://vimeo.com/800552207" target="_blank" rel="noreferrer">We Are Here 2022 <span class="pill">2022</span></a>
+          <a class="discog-item" href="https://vimeo.com/753334613" target="_blank" rel="noreferrer">HIJRA — RCA ADS11 <span class="pill">2022</span></a>
+        </div>
+      </details>
+
+      <details class="discog">
+        <summary>music videos</summary>
+        <div class="discog-inner">
+          <a class="discog-item" href="https://vimeo.com/800460077" target="_blank" rel="noreferrer">Pritt — You Mine // Home <span class="pill">2023</span></a>
+        </div>
+      </details>
+
+    </div>
+
+    <div class="stage" id="work" aria-label="Films">
+
+      <section class="float song" style="top:182px; left:0%; width:338px;" data-year="2023">
+        <a href="https://vimeo.com/877646093" target="_blank" rel="noreferrer">
+          <video class="thumb-video" autoplay muted loop playsinline preload="metadata">
+            <source src="assets/video/end-everything-water.webm" type="video/webm">
+          </video>
+          <span class="label">In The End Everything Leads to Water<span class="meta"> 2023</span><span class="blurb">Inspired by an MA project, the film explores India’s salt flats, showing how water shapes landscapes, systems, and everyday life.</span></span>
+        </a>
+      </section>
+
+      <section class="float song" style="top:156px; left:60%; width:390px;" data-year="2023">
+        <a href="https://vimeo.com/800460077" target="_blank" rel="noreferrer">
+          <video class="thumb-video" autoplay muted loop playsinline preload="metadata">
+            <source src="assets/video/you-mine-home.webm" type="video/webm">
+          </video>
+          <span class="label">Pritt — You Mine // Home<span class="meta"> 2023</span><span class="blurb">Music Video for Pritt. Cut and colour graded this. Shot on Arri Alexa, cut in Premiere Pro, graded in Davinci Pro.</span></span>
+        </a>
+      </section>
+
+      <section class="float song" style="top:559px; left:34%; width:468px;" data-year="2022">
+        <a href="https://vimeo.com/800552207" target="_blank" rel="noreferrer">
+          <div class="thumb ar-43">
+            <video class="thumb-video" autoplay muted loop playsinline preload="metadata">
+              <source src="assets/video/we-are-here-film.webm" type="video/webm">
+            </video>
+          </div>
+          <span class="label">We Are Here 2022<span class="meta"> 2022</span><span class="blurb">Commissioned film for Sound Advice’s WE ARE HERE, screening at Rio Cinema as an immersive backdrop celebrating immigrant voices during LDF.</span></span>
+        </a>
+      </section>
+
+      <section class="float song" style="top:1066px; left:8%; width:416px;" data-year="2022">
+        <a href="https://vimeo.com/771983699" target="_blank" rel="noreferrer">
+          <video class="thumb-video" autoplay muted loop playsinline preload="metadata">
+            <source src="assets/video/within-this-square-metre.webm" type="video/webm">
+          </video>
+          <span class="label">Within This Square Metre<span class="meta"> 2022</span><span class="blurb">A film revisiting a suitcase of Bharatanatyam memories, exploring diaspora, heritage, and how cultural identity endures through the body and objects.</span></span>
+        </a>
+      </section>
+
+      <section class="float song" style="top:1274px; left:62%; width:390px;" data-year="2022">
+        <a href="https://vimeo.com/753334613" target="_blank" rel="noreferrer">
+          <video class="thumb-video" autoplay muted loop playsinline preload="metadata">
+            <source src="assets/video/hijra-rca.webm" type="video/webm">
+          </video>
+          <span class="label">HIJRA — RCA ADS11<span class="meta"> 2022</span><span class="blurb">Introductory film for Royal College of Art MA Architecture unit ‘Hijra’.</span></span>
+        </a>
+      </section>
+
+      <div class="scroll-spacer" aria-hidden="true"></div>
+
+    </div>
+
+    <nav class="footer" aria-label="Footer links">
+      <span class="name">dilushselva</span>
+      <a href="#work">Top</a>
+      <a href="https://www.instagram.com/dilushselva/" target="_blank" rel="noreferrer">Insta</a>
+      <a href="https://soundcloud.com/lushylmao" target="_blank" rel="noreferrer">SoundCloud</a>
+      <a href="https://tr.ee/t0TrKUNe1w" target="_blank" rel="noreferrer">Spotify</a>
+      <a href="https://vimeo.com/dilushselva" target="_blank" rel="noreferrer">Film</a>
+    </nav>
+  
+    <aside class="editorial-index" aria-hidden="true">
+      <div class="editorial-title">films</div>
+      <div class="editorial-years">
+        <span data-year="2022">— 2022</span>
+        <span data-year="2023">— 2023</span>
+      </div>
+      <div class="editorial-end">archive in progress</div>
+    </aside>
+
+  </main>
+
+  <script>
+    // subtle position jitter per refresh (desktop only)
+    (function(){
+      const isMobile = matchMedia("(max-width: 720px)").matches;
+      if (isMobile) return;
+      document.querySelectorAll(".stage .song.float").forEach((el) => {
+        const dx = (Math.random() - 0.5) * 16; // -8..8
+        const dy = (Math.random() - 0.5) * 16; // -8..8
+        el.style.transform = (el.style.transform || "") + ` translate(${dx}px, ${dy}px)`;
+      });
+    })();
+
+    // fade-in on scroll (opacity only)
+    (function(){
+      const tiles = document.querySelectorAll(".song");
+      if (!("IntersectionObserver" in window)){
+        tiles.forEach(t => t.classList.add("is-visible"));
+        return;
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting){
+            e.target.classList.add("is-visible");
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      tiles.forEach(t => io.observe(t));
+    })();
+  </script>
+
+<script>
+(function(){
+  const years = document.querySelectorAll(".editorial-years span");
+  function setActive(y){
+    years.forEach(s=>{
+      s.classList.remove("is-active","is-dim");
+      if(!y) return;
+      if(s.dataset.year===y) s.classList.add("is-active");
+      else s.classList.add("is-dim");
+    });
+  }
+  document.querySelectorAll(".song[data-year]").forEach(song=>{
+    const y=song.dataset.year;
+    song.addEventListener("mouseenter",()=>setActive(y));
+    song.addEventListener("mouseleave",()=>setActive(null));
+  });
+})();
+</script>
+
+
+  <script>
+    // If "Within This Square Metre" GIF filename differs, try fallbacks (no layout changes)
+    (function(){
+      document.querySelectorAll('img.gif-fallback[data-fallback]').forEach(function(img){
+        const list = img.getAttribute('data-fallback').split(',').map(s=>s.trim()).filter(Boolean);
+        let i = 0;
+        img.addEventListener('error', function(){
+          if(i >= list.length) return;
+          img.src = list[i++];
+        }, { once: false });
+      });
+    })();
+  </script>
+
+</body>
+</html>
