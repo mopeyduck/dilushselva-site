@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <link rel="icon" type="image/png" href="/assets/favicon.png">
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>dilushselva — Film</title>
     <!-- JetBrains Mono for numeric UI (slashed zero) -->
@@ -452,6 +451,202 @@
       will-change: transform;
     }
 
+
+/* mobile hamburger */
+.nav-toggle{
+  display:none;
+  background:transparent;
+  border:0;
+  padding:0;
+  font: inherit;
+  font-weight:700;
+  color:#000;
+  cursor:pointer;
+  line-height:1;
+}
+.mobile-menu{ display:none; }
+
+@media (max-width: 720px){
+  .nav-center{ display:none !important; }
+  .meta{ display:none !important; }
+  .nav-toggle{
+    display:block;
+    position:fixed;
+    top:18px;
+    right:18px;
+    z-index:1400;
+    font-size:24px;
+  }
+  .mobile-menu{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:1350;
+    background:rgba(255,255,255,.96);
+    padding:72px 18px 18px;
+  }
+  body.menu-open .mobile-menu{ display:block; }
+  body.menu-open{ overflow:hidden; }
+  .mobile-links a{
+    display:block;
+    font-weight:700;
+    font-size:22px;
+    letter-spacing:.02em;
+    text-decoration:none;
+    color:#000;
+    margin:14px 0;
+  }
+  .mobile-links a.is-active{ color: var(--accent); }
+  .mobile-email{
+    margin-top:26px;
+    font-size:14px !important;
+    font-weight:700;
+    opacity:.9;
+  }
+}
+
+
+
+/* -----------------------------
+   Mobile polish overrides (v2)
+   - smaller menu text
+   - footer stays on one line
+   - consistent hamburger
+------------------------------ */
+@media (max-width: 900px){
+  body{ padding-bottom: 74px !important; }
+
+  /* ensure hamburger appears consistently on phones */
+  .nav-toggle{ display:block !important; }
+  .nav-center, .meta{ display:none !important; }
+
+  /* mobile menu typography */
+  .mobile-links a{
+    font-size: 13px !important;
+    margin: 10px 0 !important;
+    letter-spacing: .01em !important;
+  }
+  .mobile-email{ font-size: 12px !important; margin-top: 18px !important; }
+
+  /* footer: single line (scroll if needed) */
+  .footer{
+    left:18px !important;
+    right:18px !important;
+    gap:10px !important;
+    font-size:11px !important;
+    flex-wrap:nowrap !important;
+    white-space:nowrap !important;
+    overflow-x:auto !important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .footer::-webkit-scrollbar{ display:none; }
+}
+
+
+@media (max-width: 900px){
+  /* reduce the big dead space between drawers and stacked thumbnails */
+  .leftcol{
+    padding-bottom: 24px !important; /* was huge to support desktop scroll model */
+    margin-top: 18px !important;
+  }
+
+  /* bring stacked tiles up + reduce whitespace overall */
+  .float{ margin: 12px auto !important; }
+
+  /* keep content clear of fixed footer without adding tons of space */
+  .wrap{ padding-bottom: 86px !important; }
+}
+
+
+/* -----------------------------
+   Mobile footer banner + centering (v3)
+------------------------------ */
+@media (max-width: 900px){
+  .footer{
+    left:0 !important;
+    right:0 !important;
+    bottom:0 !important;
+    padding: 12px 18px !important;
+    background:#fff !important;
+    justify-content:center !important;
+    text-align:center !important;
+    gap:12px !important;
+    border-top: 1px solid rgba(0,0,0,.08);
+    flex-wrap:nowrap !important;
+    white-space:nowrap !important;
+    overflow-x:auto !important; /* keeps one line on tiny phones */
+    -webkit-overflow-scrolling:touch;
+  }
+  .footer::-webkit-scrollbar{ display:none; }
+}
+
+
+@media (max-width: 900px){
+  /* reduce bottom dead space above the fixed footer */
+  body{ padding-bottom: 54px !important; }
+  .wrap{ padding-bottom: 58px !important; }
+
+  /* tighten last tile spacing */
+  .float:last-child{ margin-bottom: 18px !important; }
+}
+
+
+/* remove editorial index block on Film page (it overlaps / isn't needed) */
+
+
+
+@media (max-width: 900px){
+  /* pin footer to bottom on mobile */
+  .footer{
+    position: fixed !important;
+    bottom: 0 !important;
+  }
+  body{ padding-bottom: 74px !important; }
+}
+
+
+@media (max-width: 900px){
+  /* expand film thumbnails to fill more screen width */
+  .float{
+    width: 92vw !important;
+    max-width: 92vw !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .float video,
+  .float img{
+    width: 100% !important;
+    height: auto !important;
+  }
+}
+
+
+@media (max-width: 900px){
+  /* ensure film blurbs are always visible on mobile */
+  .blurb,
+  .caption,
+  .description{
+    opacity: 1 !important;
+    transform: none !important;
+    display: block !important;
+  }
+}
+
+
+@media (max-width: 900px){
+  /* ensure film blurbs are always visible on mobile (override collapsible styles) */
+  .blurb{
+    opacity: 1 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+
+@media (max-width: 900px){
+  .editorial-index{ display:none !important; }
+}
+
 </style>
 </head>
 
@@ -466,7 +661,18 @@
     <div class="meta">
       <a href="mailto:dilushselva@gmail.com">dilushselva@gmail.com</a>
     </div>
-  </header>
+    <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" type="button">☰</button>
+</header>
+
+<div class="mobile-menu" aria-hidden="true">
+  <nav class="mobile-links" aria-label="Mobile">
+    <a href="about.html" class="">About</a>
+    <a href="music.html" class="">Music</a>
+    <a href="film.html" class="is-active">Film</a>
+    <a class="mobile-email" href="mailto:dilushselva@gmail.com">dilushselva@gmail.com</a>
+  </nav>
+</div>
+
 
   <div class="logo-fixed">
     <img src="assets/DILUSHSELVA LOGO_small.png" alt="dilushselva logo">
@@ -563,11 +769,11 @@ sound design, and music programming.
 
     <nav class="footer" aria-label="Footer links">
       <span class="name">dilushselva</span>
-      <a href="#work">Top</a>
+      <a href="music.html">Top</a>
       <a href="https://www.instagram.com/dilushselva/" target="_blank" rel="noreferrer">Insta</a>
       <a href="https://soundcloud.com/lushylmao" target="_blank" rel="noreferrer">SoundCloud</a>
       <a href="https://tr.ee/t0TrKUNe1w" target="_blank" rel="noreferrer">Spotify</a>
-      <a href="https://vimeo.com/dilushselva" target="_blank" rel="noreferrer">Film</a>
+      <a href="film.html" target="_blank" rel="noreferrer" class="is-active">Film</a>
     </nav>
   
     <aside class="editorial-index" aria-hidden="true">
@@ -645,6 +851,37 @@ sound design, and music programming.
       });
     })();
   </script>
+
+
+<script>
+(function(){
+  const btn = document.querySelector('.nav-toggle');
+  const menu = document.querySelector('.mobile-menu');
+  if(!btn || !menu) return;
+
+  function setOpen(open){
+    document.body.classList.toggle('menu-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    btn.textContent = open ? '×' : '☰';
+    menu.setAttribute('aria-hidden', open ? 'false' : 'true');
+  }
+
+  btn.addEventListener('click', function(){
+    setOpen(!document.body.classList.contains('menu-open'));
+  });
+
+  // close when clicking a link
+  menu.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(a) setOpen(false);
+  });
+
+  // close on ESC
+  window.addEventListener('keydown', function(e){
+    if(e.key === 'Escape') setOpen(false);
+  });
+})();
+</script>
 
 </body>
 </html>
